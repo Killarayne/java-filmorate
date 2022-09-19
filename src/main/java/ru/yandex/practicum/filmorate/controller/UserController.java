@@ -8,18 +8,20 @@ import ru.yandex.practicum.filmorate.model.User;
 
 
 import java.util.HashSet;
+import java.util.Set;
 
-import static ru.yandex.practicum.filmorate.validator.Validator.validate;
+
+import static ru.yandex.practicum.filmorate.validator.Validator.validateUser;
 
 @Slf4j
 @RestController
 @RequestMapping("/users")
 public class UserController {
-    private final HashSet<User> users = new HashSet<>();
+    private final Set<User> users = new HashSet<>();
     private int genrateID = 0;
 
     @GetMapping
-    public HashSet<User> findAll() {
+    public Set<User> findAll() {
         log.debug("Количество пользователей: {}", users.size());
         return users;
     }
@@ -31,7 +33,7 @@ public class UserController {
             user.setId(++genrateID);
         }
 
-        if (validate(user)) {
+        if (validateUser(user)) {
             users.add(user);
             log.debug("Добавлен пользователь: {}", user.getEmail());
         } else {
@@ -44,7 +46,7 @@ public class UserController {
 
     @PutMapping
     public User update(@RequestBody User user) throws ValidationException {
-        if (validate(user) && users.contains(user)) {
+        if (validateUser(user) && users.contains(user)) {
             users.remove(user);
             users.add(user);
             log.debug("Пользователь " + user.getName() + " обновлен");

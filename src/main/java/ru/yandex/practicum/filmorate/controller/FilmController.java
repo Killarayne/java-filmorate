@@ -9,7 +9,8 @@ import ru.yandex.practicum.filmorate.model.Film;
 import java.util.ArrayList;
 import java.util.List;
 
-import static ru.yandex.practicum.filmorate.validator.Validator.validate;
+
+import static ru.yandex.practicum.filmorate.validator.Validator.validateFilm;
 
 @Slf4j
 @RestController
@@ -29,7 +30,7 @@ public class FilmController {
         if (film.getId() == null) {
             film.setId(++genrateID);
         }
-        if (validate(film)) {
+        if (validateFilm(film)) {
             films.add(film);
             log.debug("Добавлен фильм: ", film.getDescription());
         } else {
@@ -41,7 +42,7 @@ public class FilmController {
 
     @PutMapping
     public Film update(@RequestBody Film film) throws ValidationException {
-        if (validate(film) && films.contains(film)) {
+        if (validateFilm(film) && films.contains(film)) {
             films.set(films.indexOf(film), film);
             log.debug("Фильм " + film.getName() + "обновлен");
         } else {

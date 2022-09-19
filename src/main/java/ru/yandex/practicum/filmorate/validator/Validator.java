@@ -6,26 +6,41 @@ import ru.yandex.practicum.filmorate.model.User;
 import java.time.LocalDate;
 
 public class Validator {
-    public static Boolean validate(Object object) {
-        LocalDate localDate = LocalDate.parse("1895-12-28");
-        if (object instanceof Film) {
-            Film film = (Film) object;
-            if (film.getName() != null &&!film.getName().isBlank() && film.getDescription().length() < 200 && film.getReleaseDate().isAfter(localDate) &&
-                    film.getDuration()> 0) {
-                return true;
-            }
 
-        } else if (object instanceof User) {
-            User user = (User) object;
-            if (!user.getEmail().isBlank() && user.getEmail().contains("@") && !user.getLogin().isBlank() &&
-                    !user.getLogin().contains(" ") && user.getBirthday().isBefore(LocalDate.now())) {
-                if (user.getName() == null || user.getName().isBlank()) {
-                    user.setName(user.getLogin());
-                }
-                return true;
+    static LocalDate startReleaseDate = LocalDate.parse("1895-12-28");
 
-            }
-        }
-        return false;
+    public static Boolean validateFilm(Film film) {
+        return film != null && validateString(film.getName()) && validateDescription(film.getDescription()) &&
+                validateDate(film.getReleaseDate(), startReleaseDate) && validateDuration(film.getDuration());
+
     }
+
+    public static Boolean validateUser(User user) {
+        return user != null && validateString(user.getEmail()) && validateEmail(user.getEmail()) && validateString(user.getLogin()) &&
+                !user.getLogin().contains(" ") && !validateDate(user.getBirthday(), LocalDate.now());
+
+    }
+
+
+
+    public static boolean validateString(String name) {
+        return name != null &&!name.isBlank();
+    }
+
+    public static boolean validateDescription(String description) {
+        return description.length() < 200;
+    }
+
+    public static boolean validateDate(LocalDate date, LocalDate dateToCompare) {
+
+        return date.isAfter(dateToCompare);
+    }
+
+    public static boolean validateDuration(Integer duration) {
+        return duration > 0;
+    }
+    public static boolean validateEmail(String email) {
+        return email.contains("@");
+    }
+
 }

@@ -10,24 +10,24 @@ import java.util.Objects;
 @Data
 public class User {
     private Integer id;
-
     private String email;
-
-
     private String login;
     private String name;
-
     private LocalDate birthday;
 
 
     public User(String email, String login, String name, String birthday) {
         this.email = email;
         this.login = login;
-        this.name = name;
+        if (name == null) {
+            this.name = login;
+        } else {
+            this.name = name;
+        }
+
         this.birthday = LocalDate.parse(birthday);
 
     }
-
 
 
     @Override

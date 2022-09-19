@@ -8,6 +8,9 @@ import ru.yandex.practicum.filmorate.validator.Validator;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import static ru.yandex.practicum.filmorate.validator.Validator.validateFilm;
+import static ru.yandex.practicum.filmorate.validator.Validator.validateUser;
+
 import java.time.LocalDate;
 
 public class ValidatorTest {
@@ -24,23 +27,23 @@ public class ValidatorTest {
 
     @Test
     void shouldTrueWhenCorrectFilmData() {
-        assertTrue(Validator.validate(newFilm), "Неверное поведение при корректных данных");
+        assertTrue(validateFilm(newFilm), "Неверное поведение при корректных данных");
 
     }
 
     @Test
     void shouldFalseWhenIncorrectFilmName() {
         newFilm.setName("");
-        assertFalse(Validator.validate(newFilm), "Неверное поведение при некорректном назавании");
+        assertFalse(validateFilm(newFilm), "Неверное поведение при некорректном назавании");
         newFilm.setName(null);
-        assertFalse(Validator.validate(newFilm), "Неверное поведение при некорректном назавании");
+        assertFalse(validateFilm(newFilm), "Неверное поведение при некорректном назавании");
 
     }
 
     @Test
     void shouldFalseWhenIncorrectFilmDescription() {
         newFilm.setDescription("Фильм о шпионе".repeat(200));
-        assertFalse(Validator.validate(newFilm), "Неверное поведение при некорректном описании");
+        assertFalse(validateFilm(newFilm), "Неверное поведение при некорректном описании");
 
     }
 
@@ -48,7 +51,7 @@ public class ValidatorTest {
     void shouldFalseWhenIncorrectFilmReleaseDate() {
 
         newFilm.setReleaseDate(LocalDate.parse("1800-12-12"));
-        assertFalse(Validator.validate(newFilm), "Неверное поведение при некорректной дате");
+        assertFalse(validateFilm(newFilm), "Неверное поведение при некорректной дате");
 
     }
 
@@ -56,30 +59,30 @@ public class ValidatorTest {
     void shouldFalseWhenIncorrectFilmDuration() {
 
         newFilm.setDuration(-120);
-        assertFalse(Validator.validate(newFilm), "Неверное поведение при отрицательной продолжительности");
+        assertFalse(validateFilm(newFilm), "Неверное поведение при отрицательной продолжительности");
 
     }
 
     @Test
     void shouldFalseWhenFilmIsNull() {
         Film emptyFilm = null;
-        assertFalse(Validator.validate(emptyFilm), "Неверное поведение при отрицательной продолжительности");
+        assertFalse(validateFilm(emptyFilm), "Неверное поведение при отрицательной продолжительности");
 
     }
 
 
     @Test
     void shouldTrueWhenCorrectUserData() {
-        assertTrue(Validator.validate(newUser), "Неверное поведение при корректных данных");
+        assertTrue(validateUser(newUser), "Неверное поведение при корректных данных");
 
     }
 
     @Test
     void shouldFalseWhenIncorrectUserEmail() {
         newUser.setEmail("");
-        assertFalse(Validator.validate(newUser), "Неверное поведение при некорректном email");
+        assertFalse(validateUser(newUser), "Неверное поведение при некорректном email");
         newUser.setEmail("saltykov&yandex.ru");
-        assertFalse(Validator.validate(newUser), "Неверное поведение при некорректном email");
+        assertFalse(validateUser(newUser), "Неверное поведение при некорректном email");
 
 
     }
@@ -87,25 +90,24 @@ public class ValidatorTest {
     @Test
     void shouldFalseWhenIncorrectUserLogin() {
         newUser.setLogin("");
-        assertFalse(Validator.validate(newUser), "Неверное поведение при некорректном Login");
+        assertFalse(validateUser(newUser), "Неверное поведение при некорректном Login");
         newUser.setLogin("ka sa il");
-        assertFalse(Validator.validate(newUser), "Неверное поведение при некорректном Login");
+        assertFalse(validateUser(newUser), "Неверное поведение при некорректном Login");
 
 
     }
 
     @Test
     void shouldUseLoginWhenNameIsEmpty() {
-        newUser.setName(null);
-        Validator.validate(newUser);
-        assertEquals(newUser.getName(), newUser.getLogin(), "Неверное поведение при отсутвующем имени пользователя");
+        User newUser2 = new User("Saltykov@yandex.ru", "kasail", null, "1993-09-29");
+        assertEquals(newUser2.getName(), newUser2.getLogin(), "Неверное поведение при отсутвующем имени пользователя");
 
     }
 
     @Test
     void shouldFalseWhenIncorrectUserBirthday() {
         newUser.setBirthday(LocalDate.parse("2023-12-12"));
-        assertFalse(Validator.validate(newUser), "Неверное поведение при некорректной дате рождения");
+        assertFalse(validateUser(newUser), "Неверное поведение при некорректной дате рождения");
 
 
     }
@@ -114,8 +116,8 @@ public class ValidatorTest {
     void shouldFalseWhenIncorrectObjectsIsNull() {
         newUser = null;
         newFilm = null;
-        assertFalse(Validator.validate(newUser), "Неверное поведение при отсутвующих ссылках на обьекты");
-        assertFalse(Validator.validate(newFilm), "Неверное поведение при отсутвующих ссылках на обьекты");
+        assertFalse(validateUser(newUser), "Неверное поведение при отсутвующих ссылках на обьекты");
+        assertFalse(validateFilm(newFilm), "Неверное поведение при отсутвующих ссылках на обьекты");
 
 
     }
