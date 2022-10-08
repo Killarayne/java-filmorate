@@ -2,10 +2,13 @@ package ru.yandex.practicum.filmorate.model;
 
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Data
 public class User {
@@ -15,11 +18,14 @@ public class User {
     private String name;
     private LocalDate birthday;
 
+    private Set<Integer> friends = new HashSet<>();
+
+
 
     public User(String email, String login, String name, String birthday) {
         this.email = email;
         this.login = login;
-        if (name == null) {
+        if (name == null || name.isBlank()) {
             this.name = login;
         } else {
             this.name = name;
@@ -29,6 +35,13 @@ public class User {
 
     }
 
+    public Set<Integer> getFriends() {
+        return friends;
+    }
+
+    public void setFriend(Integer friendID) {
+        friends.add(friendID);
+    }
 
     @Override
     public boolean equals(Object o) {
