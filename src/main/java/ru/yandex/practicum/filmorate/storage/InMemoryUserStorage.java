@@ -20,22 +20,21 @@ public class InMemoryUserStorage implements UserStorage {
     private int genrateID = 0;
 
     @Override
-    public User getUserByID(Integer ID) {
-        if (users.containsKey(ID)){
-            log.debug("Получен пользователь с ID: "+ ID);
-            return users.get(ID);
-        }else {
-            log.warn("Пользователя с ID: "+ ID + " не существует");
-            throw new NotFoundException("Пользователя с ID: "+ ID + " не существует");
+    public User getUserByID(Integer id) {
+        if (users.containsKey(id)) {
+            log.debug("Получен пользователь с ID: " + id);
+            return users.get(id);
+        } else {
+            log.warn("Пользователя с ID: " + id + " не существует");
+            throw new NotFoundException("Пользователя с ID: " + id + " не существует");
         }
 
 
     }
 
 
-
     @Override
-    public Map<Integer, User> getUsers(){
+    public Map<Integer, User> getUsers() {
         return users;
     }
 

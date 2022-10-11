@@ -19,19 +19,20 @@ public class Film {
 
     private Set<Integer> likes = new HashSet<>();
 
-    public void setLike(Integer userID) {
-        likes.add(userID);
-    }
-
-    public Set<Integer>  getLikes() {
-        return likes;
-    }
 
     public Film(String name, String description, LocalDate releaseDate, int duration) {
         this.name = name;
         this.description = description;
         this.releaseDate = releaseDate;
         this.duration = duration;
+    }
+
+    public void setLike(Integer userID) {
+        likes.add(userID);
+    }
+
+    public Set<Integer> getLikes() {
+        return likes;
     }
 
     @Override

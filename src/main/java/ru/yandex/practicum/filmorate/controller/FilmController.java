@@ -21,8 +21,8 @@ import static ru.yandex.practicum.filmorate.validator.Validator.validateFilm;
 @RequestMapping("/films")
 public class FilmController {
 
-    FilmStorage filmStorage;
-    FilmService filmService;
+    private FilmStorage filmStorage;
+    private FilmService filmService;
 
     @Autowired
     public FilmController(FilmStorage filmStorage, FilmService filmService) {
@@ -51,17 +51,17 @@ public class FilmController {
     }
 
     @PutMapping("/{id}/like/{userId}")
-    public void addLike(@PathVariable Integer id, @PathVariable Integer userId){
+    public void addLike(@PathVariable Integer id, @PathVariable Integer userId) {
         filmService.addLike(id, userId);
     }
 
     @DeleteMapping("/{id}/like/{userId}")
-    public void deleteLike(@PathVariable Integer id, @PathVariable Integer userId){
+    public void deleteLike(@PathVariable Integer id, @PathVariable Integer userId) {
         filmService.deleteLike(id, userId);
     }
 
     @GetMapping("/popular")
-    public List<Film> getPopularFilms(@RequestParam(value = "count", defaultValue = "10", required = false)Integer count){
-       return filmService.getListPopularFilm(count);
+    public List<Film> getPopularFilms(@RequestParam(value = "count", defaultValue = "10", required = false) Integer count) {
+        return filmService.getListPopularFilm(count);
     }
 }

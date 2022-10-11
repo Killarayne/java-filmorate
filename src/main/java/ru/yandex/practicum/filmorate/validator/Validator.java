@@ -22,9 +22,8 @@ public class Validator {
     }
 
 
-
     public static boolean validateString(String name) {
-        return name != null &&!name.isBlank();
+        return name != null && !name.isBlank();
     }
 
     public static boolean validateDescription(String description) {
@@ -39,6 +38,7 @@ public class Validator {
     public static boolean validateDuration(Integer duration) {
         return duration > 0;
     }
+
     public static boolean validateEmail(String email) {
         return email.contains("@");
     }

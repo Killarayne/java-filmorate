@@ -10,8 +10,10 @@ public interface UserStorage {
 
     Map<Integer, User> getUsers();
 
-    User getUserByID(Integer ID);
+    User getUserByID(Integer id);
+
     List<User> findAll();
+
     User create(User user) throws ValidationException;
 
     User update(User user) throws ValidationException;

@@ -10,10 +10,11 @@ public interface FilmStorage {
 
     Map<Integer, Film> getFilms();
 
-    Film getFilmByID(Integer filmID);
+    Film getFilmByID(Integer filmId);
 
     List<Film> findAll();
-    Film create(Film film)throws ValidationException;
 
-    Film update(Film film)throws ValidationException;
+    Film create(Film film) throws ValidationException;
+
+    Film update(Film film) throws ValidationException;
 }

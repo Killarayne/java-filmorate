@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import ru.yandex.practicum.filmorate.exeptions.NotFoundException;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.storage.InMemoryUserStorage;
+
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 
 import java.util.HashSet;
@@ -15,7 +15,7 @@ import java.util.Set;
 @Service
 @Slf4j
 public class UserService {
-    UserStorage userStorage;
+    private UserStorage userStorage;
 
     @Autowired
     public UserService(UserStorage userStorage) {
@@ -23,24 +23,24 @@ public class UserService {
     }
 
 
-    public void addFriend(Integer userID, Integer friendID) {
-        if (userStorage.getUsers().containsKey(userID) && userStorage.getUsers().containsKey(friendID)) {
-            userStorage.getUserByID(userID).setFriend(friendID);
-            userStorage.getUserByID(friendID).setFriend(userID);
-            log.debug("Пользователь с ID " + userID + " начал дружить с пользователем с ID " + friendID);
+    public void addFriend(Integer userId, Integer friendId) {
+        if (userStorage.getUsers().containsKey(userId) && userStorage.getUsers().containsKey(friendId)) {
+            userStorage.getUserByID(userId).setFriend(friendId);
+            userStorage.getUserByID(friendId).setFriend(userId);
+            log.debug("Пользователь с ID " + userId + " начал дружить с пользователем с ID " + friendId);
         } else {
             log.warn("Пользователь не найден");
             throw new NotFoundException("Пользователь не найден");
         }
     }
 
-    public Set<User> getFriendByID(Integer ID) {
+    public Set<User> getFriendsByID(Integer id) {
         Set<User> freiendsSet = new HashSet<>();
-        if (userStorage.getUsers().containsKey(ID)) {
-            for (Integer i : userStorage.getUserByID(ID).getFriends()) {
+        if (userStorage.getUsers().containsKey(id)) {
+            for (Integer i : userStorage.getUserByID(id).getFriends()) {
                 freiendsSet.add(userStorage.getUserByID(i));
             }
-            log.debug("Получены друзья у пользователя с ID " + ID);
+            log.debug("Получены друзья у пользователя с ID " + id);
             return freiendsSet;
         } else {
             log.warn("Пользователь не найден");
@@ -50,22 +50,21 @@ public class UserService {
     }
 
 
-    public void deleteFriend(Integer userID, Integer friendID) {
-        if (userStorage.getUsers().containsKey(userID) && userStorage.getUsers().containsKey(friendID)) {
-            userStorage.getUserByID(userID).getFriends().remove(userStorage.getUserByID(friendID));
-            log.debug("Пользователь с ID " + userID + " перестал дружить с пользователем с ID " + friendID);
+    public void deleteFriend(Integer userId, Integer friendId) {
+        if (userStorage.getUsers().containsKey(userId) && userStorage.getUsers().containsKey(friendId)) {
+            userStorage.getUserByID(userId).getFriends().remove(userStorage.getUserByID(friendId));
+            log.debug("Пользователь с ID " + userId + " перестал дружить с пользователем с ID " + friendId);
         } else {
             log.warn("Пользователь не найден");
             throw new NotFoundException("Пользователь не найден");
         }
     }
 
-    public Set<User> getCommonFriends(Integer ID, Integer anotherID) {
-
+    public Set<User> getCommonFriends(Integer id, Integer anotherId) {
         Set<User> commonFriendsSet = new HashSet<>();
-        if (userStorage.getUsers().containsKey(ID) && userStorage.getUsers().containsKey(anotherID)) {
-            Set<Integer> setOfID = new HashSet<>(userStorage.getUserByID(ID).getFriends());
-            setOfID.retainAll(userStorage.getUserByID(anotherID).getFriends());
+        if (userStorage.getUsers().containsKey(id) && userStorage.getUsers().containsKey(anotherId)) {
+            Set<Integer> setOfID = new HashSet<>(userStorage.getUserByID(id).getFriends());
+            setOfID.retainAll(userStorage.getUserByID(anotherId).getFriends());
             for (Integer i : setOfID) {
                 commonFriendsSet.add(userStorage.getUserByID(i));
             }

@@ -18,38 +18,37 @@ import java.util.stream.Collectors;
 @Slf4j
 public class FilmService {
 
-    FilmStorage filmStorage;
-    UserStorage userStorage;
+    private FilmStorage filmStorage;
+    private UserStorage userStorage;
 
 
     @Autowired
-    public FilmService(FilmStorage filmStorage, UserStorage userStorage){
+    public FilmService(FilmStorage filmStorage, UserStorage userStorage) {
         this.filmStorage = filmStorage;
         this.userStorage = userStorage;
     }
 
-    public void addLike(Integer filmID, Integer userID){
-        if(filmStorage.getFilms().containsKey(filmID) && userStorage.getUsers().containsKey(userID)){
-            filmStorage.getFilmByID(filmID).setLike(userID);
-            log.debug("Добавлен лайк фильму "+ filmStorage.getFilmByID(filmID) );
-        }else {
+    public void addLike(Integer filmId, Integer userId) {
+        if (filmStorage.getFilms().containsKey(filmId) && userStorage.getUsers().containsKey(userId)) {
+            filmStorage.getFilmByID(filmId).setLike(userId);
+            log.debug("Добавлен лайк фильму " + filmStorage.getFilmByID(filmId));
+        } else {
             log.warn("Неверный ID");
             throw new NotFoundException("Неверный ID");
         }
 
     }
 
-    public void deleteLike(Integer filmID, Integer userID){
-        if(filmStorage.getFilms().containsKey(filmID) && userStorage.getUsers().containsKey(userID)){
-            filmStorage.getFilmByID(filmID).getLikes().remove(userID);
-            log.debug("Удален лайк фильму "+ filmStorage.getFilmByID(filmID) );
-        }else {
+    public void deleteLike(Integer filmId, Integer userId) {
+        if (filmStorage.getFilms().containsKey(filmId) && userStorage.getUsers().containsKey(userId)) {
+            filmStorage.getFilmByID(filmId).getLikes().remove(userId);
+            log.debug("Удален лайк фильму " + filmStorage.getFilmByID(filmId));
+        } else {
             log.warn("Неверный ID");
             throw new NotFoundException("Не верный ID");
         }
 
     }
-
 
     public List<Film> getListPopularFilm(long count) {
         Collection<Film> popularFilms = filmStorage.getFilms().values();

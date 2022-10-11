@@ -21,25 +21,23 @@ public class InMemoryFilmStorage implements FilmStorage {
     private int genrateID = 0;
 
     @Override
-    public Map<Integer, Film> getFilms(){
+    public Map<Integer, Film> getFilms() {
         return films;
     }
 
 
     @Override
-    public Film getFilmByID(Integer filmID){
+    public Film getFilmByID(Integer filmId) {
 
-        if (films.containsKey(filmID)){
-            log.debug("Получен фильм с ID: " + filmID);
-            return films.get(filmID);
-        }else {
-            log.warn("Фильма с " + filmID + " не существует ");
-            throw new NotFoundException("Фильма с " + filmID + " не существует ");
+        if (films.containsKey(filmId)) {
+            log.debug("Получен фильм с ID: " + filmId);
+            return films.get(filmId);
+        } else {
+            log.warn("Фильма с " + filmId + " не существует ");
+            throw new NotFoundException("Фильма с " + filmId + " не существует ");
         }
 
     }
-
-
 
 
     @Override

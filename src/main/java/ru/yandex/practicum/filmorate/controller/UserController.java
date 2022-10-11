@@ -20,8 +20,8 @@ import java.util.Set;
 @RequestMapping("/users")
 public class UserController {
 
-    UserStorage userStorage;
-    UserService userService;
+    private UserStorage userStorage;
+    private UserService userService;
 
     @Autowired
     public UserController(InMemoryUserStorage userStorage, UserService userService) {
@@ -58,17 +58,17 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}/friends/{friendId}")
-    public void deleteFriend(@PathVariable Integer id,@PathVariable Integer friendId) {
+    public void deleteFriend(@PathVariable Integer id, @PathVariable Integer friendId) {
         userService.deleteFriend(id, friendId);
     }
 
     @GetMapping("/{id}/friends")
     public Set<User> getFriends(@PathVariable Integer id) {
-        return userService.getFriendByID(id);
+        return userService.getFriendsByID(id);
     }
 
     @GetMapping("/{id}/friends/common/{otherId}")
-    public Set<User> getCommonFriends(@PathVariable Integer id,@PathVariable Integer otherId) {
+    public Set<User> getCommonFriends(@PathVariable Integer id, @PathVariable Integer otherId) {
         return userService.getCommonFriends(id, otherId);
     }
 }
