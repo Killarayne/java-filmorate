@@ -17,9 +17,7 @@ public class User {
     private String login;
     private String name;
     private LocalDate birthday;
-
     private Set<Integer> friends = new HashSet<>();
-
 
     public User(String email, String login, String name, String birthday) {
         this.email = email;
@@ -29,9 +27,7 @@ public class User {
         } else {
             this.name = name;
         }
-
         this.birthday = LocalDate.parse(birthday);
-
     }
 
     public Set<Integer> getFriends() {

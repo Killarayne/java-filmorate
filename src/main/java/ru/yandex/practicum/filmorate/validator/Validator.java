@@ -12,15 +12,12 @@ public class Validator {
     public static Boolean validateFilm(Film film) {
         return film != null && validateString(film.getName()) && validateDescription(film.getDescription()) &&
                 validateDate(film.getReleaseDate(), startReleaseDate) && validateDuration(film.getDuration());
-
     }
 
     public static Boolean validateUser(User user) {
         return user != null && validateString(user.getEmail()) && validateEmail(user.getEmail()) && validateString(user.getLogin()) &&
                 !user.getLogin().contains(" ") && !validateDate(user.getBirthday(), LocalDate.now());
-
     }
-
 
     public static boolean validateString(String name) {
         return name != null && !name.isBlank();

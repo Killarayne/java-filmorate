@@ -28,10 +28,7 @@ public class InMemoryUserStorage implements UserStorage {
             log.warn("Пользователя с ID: " + id + " не существует");
             throw new NotFoundException("Пользователя с ID: " + id + " не существует");
         }
-
-
     }
-
 
     @Override
     public Map<Integer, User> getUsers() {
@@ -50,7 +47,6 @@ public class InMemoryUserStorage implements UserStorage {
         if (users.containsKey(user.getId())) {
             throw new ValidationException("Пользователь с такой почтой уже существует");
         }
-
         if (validateUser(user)) {
             user.setId(++genrateID);
             users.put(user.getId(), user);
@@ -61,7 +57,6 @@ public class InMemoryUserStorage implements UserStorage {
         }
         return user;
     }
-
 
     @Override
     public User update(User user) throws ValidationException {
@@ -74,6 +69,5 @@ public class InMemoryUserStorage implements UserStorage {
             throw new NotFoundException("Ошибка валидации пользователя или такого пользователя не существует");
         }
         return user;
-
     }
 }

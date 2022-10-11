@@ -21,7 +21,6 @@ public class FilmService {
     private FilmStorage filmStorage;
     private UserStorage userStorage;
 
-
     @Autowired
     public FilmService(FilmStorage filmStorage, UserStorage userStorage) {
         this.filmStorage = filmStorage;
@@ -36,7 +35,6 @@ public class FilmService {
             log.warn("Неверный ID");
             throw new NotFoundException("Неверный ID");
         }
-
     }
 
     public void deleteLike(Integer filmId, Integer userId) {

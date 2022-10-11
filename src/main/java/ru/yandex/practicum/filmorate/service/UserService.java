@@ -22,7 +22,6 @@ public class UserService {
         this.userStorage = userStorage;
     }
 
-
     public void addFriend(Integer userId, Integer friendId) {
         if (userStorage.getUsers().containsKey(userId) && userStorage.getUsers().containsKey(friendId)) {
             userStorage.getUserByID(userId).setFriend(friendId);
@@ -46,9 +45,7 @@ public class UserService {
             log.warn("Пользователь не найден");
             throw new NotFoundException("Пользователь не найден");
         }
-
     }
-
 
     public void deleteFriend(Integer userId, Integer friendId) {
         if (userStorage.getUsers().containsKey(userId) && userStorage.getUsers().containsKey(friendId)) {
@@ -74,7 +71,5 @@ public class UserService {
             log.warn("Пользователь не найден");
             throw new NotFoundException("Пользователь не найден");
         }
-
-
     }
 }

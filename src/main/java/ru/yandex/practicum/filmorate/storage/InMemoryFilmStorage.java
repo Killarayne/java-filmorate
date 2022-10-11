@@ -17,14 +17,12 @@ import static ru.yandex.practicum.filmorate.validator.Validator.validateFilm;
 @Component
 public class InMemoryFilmStorage implements FilmStorage {
     private final Map<Integer, Film> films = new HashMap<>();
-
     private int genrateID = 0;
 
     @Override
     public Map<Integer, Film> getFilms() {
         return films;
     }
-
 
     @Override
     public Film getFilmByID(Integer filmId) {
@@ -36,9 +34,7 @@ public class InMemoryFilmStorage implements FilmStorage {
             log.warn("Фильма с " + filmId + " не существует ");
             throw new NotFoundException("Фильма с " + filmId + " не существует ");
         }
-
     }
-
 
     @Override
     public List<Film> findAll() {

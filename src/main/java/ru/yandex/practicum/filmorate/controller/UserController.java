@@ -44,7 +44,6 @@ public class UserController {
     @PutMapping
     public User update(@RequestBody User user) throws ValidationException {
         return userStorage.update(user);
-
     }
 
     @GetMapping("/{id}")
