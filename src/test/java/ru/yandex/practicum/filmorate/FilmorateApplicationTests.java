@@ -9,6 +9,7 @@ import ru.yandex.practicum.filmorate.exeptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.model.User;
+import ru.yandex.practicum.filmorate.service.FilmService;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.dao.UserDbStorage;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -24,16 +25,19 @@ import java.util.Optional;
 
 class FilmorateApplicationTests {
 
-	private final FilmStorage filmStorage;
+	private final FilmService filmService;
+
+
+
 
 	@Test
 	public void testFindFilmById() throws ValidationException {
 
 		Film testFilm = new Film(1,"name", "description", LocalDate.of(1993, 9, 28), 120, new Mpa(1,"G"));
 
-		int filmId = filmStorage.create(testFilm).getId();
+		int filmId = filmService.create(testFilm).getId();
 
-		Optional<Film> filmOptional = Optional.ofNullable(filmStorage.getFilmByID(filmId));
+		Optional<Film> filmOptional = Optional.ofNullable(filmService.getFilmByID(filmId));
 		assertThat(filmOptional)
 				.isPresent()
 				.hasValueSatisfying(film ->
