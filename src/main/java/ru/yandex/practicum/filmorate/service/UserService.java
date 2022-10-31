@@ -2,74 +2,74 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import ru.yandex.practicum.filmorate.exeptions.NotFoundException;
+import ru.yandex.practicum.filmorate.exeptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.User;
 
-import ru.yandex.practicum.filmorate.storage.UserStorage;
 
-import java.util.HashSet;
-import java.util.Set;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.storage.dao.UserDbStorage;
+import ru.yandex.practicum.filmorate.validator.Validator;
+
 
 @Service
 @Slf4j
 public class UserService {
     private UserStorage userStorage;
+    private UserDbStorage userDbStorage;
 
     @Autowired
-    public UserService(UserStorage userStorage) {
+    public UserService(@Qualifier("userDbStorage") UserStorage userStorage, UserDbStorage userDbStorage) {
         this.userStorage = userStorage;
+        this.userDbStorage = userDbStorage;
     }
 
-    public void addFriend(Integer userId, Integer friendId) {
-        if (userStorage.getUsers().containsKey(userId) && userStorage.getUsers().containsKey(friendId)) {
-            userStorage.getUserByID(userId).setFriend(friendId);
-            userStorage.getUserByID(friendId).setFriend(userId);
-            log.debug("Пользователь с ID " + userId + " начал дружить с пользователем с ID " + friendId);
+    public User create(User user) throws ValidationException {
+        if (Validator.validateUser(user)) {
+            log.debug("Создал фильм с id: " + user.getId());
+            return userStorage.create(user);
         } else {
-            log.warn("Пользователь не найден");
+            log.warn("Ошибка валидации пользователя");
+            throw new ValidationException("Ошибка валидации пользователя");
+        }
+    }
+
+
+    public Boolean addFriend(Integer userId, Integer friendId) {
+        User user = userStorage.getUserByID(userId);
+        User friend = userStorage.getUserByID(friendId);
+        if (user != null && friend != null){
+            return userDbStorage.addFriend(userId,friendId);
+        }else {
             throw new NotFoundException("Пользователь не найден");
         }
     }
 
-    public Set<User> getFriendsByID(Integer id) {
-        Set<User> freiendsSet = new HashSet<>();
-        if (userStorage.getUsers().containsKey(id)) {
-            for (Integer i : userStorage.getUserByID(id).getFriends()) {
-                freiendsSet.add(userStorage.getUserByID(i));
+    public User getUserByID(Integer id) {
+        User newUser = userStorage.getUserByID(id);
+        if (newUser != null) {
+            log.debug("Получен пользователь с id " + id);
+            return newUser;
+        } else {
+            throw new NotFoundException("Такого пользователя не существует");
+        }
+    }
+
+    public User update(User user) throws ValidationException {
+        if (Validator.validateUser(user)) {
+                userStorage.update(user);
+                log.debug("Обновлен пользователь с id " + user.getId());
+                return user;
+            } else {
+                log.warn("Такого пользователя не существует");
+                throw new NotFoundException("Такого пользователя не существует");
             }
-            log.debug("Получены друзья у пользователя с ID " + id);
-            return freiendsSet;
-        } else {
-            log.warn("Пользователь не найден");
-            throw new NotFoundException("Пользователь не найден");
+
         }
     }
 
-    public void deleteFriend(Integer userId, Integer friendId) {
-        if (userStorage.getUsers().containsKey(userId) && userStorage.getUsers().containsKey(friendId)) {
-            userStorage.getUserByID(userId).getFriends().remove(userStorage.getUserByID(friendId));
-            log.debug("Пользователь с ID " + userId + " перестал дружить с пользователем с ID " + friendId);
-        } else {
-            log.warn("Пользователь не найден");
-            throw new NotFoundException("Пользователь не найден");
-        }
-    }
 
-    public Set<User> getCommonFriends(Integer id, Integer anotherId) {
-        Set<User> commonFriendsSet = new HashSet<>();
-        if (userStorage.getUsers().containsKey(id) && userStorage.getUsers().containsKey(anotherId)) {
-            Set<Integer> setOfID = new HashSet<>(userStorage.getUserByID(id).getFriends());
-            setOfID.retainAll(userStorage.getUserByID(anotherId).getFriends());
-            for (Integer i : setOfID) {
-                commonFriendsSet.add(userStorage.getUserByID(i));
-            }
-            log.debug("Предоставлены общие друзья");
-            return commonFriendsSet;
-        } else {
-            log.warn("Пользователь не найден");
-            throw new NotFoundException("Пользователь не найден");
-        }
-    }
-}
+

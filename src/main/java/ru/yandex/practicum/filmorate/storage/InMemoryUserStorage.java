@@ -30,7 +30,6 @@ public class InMemoryUserStorage implements UserStorage {
         }
     }
 
-    @Override
     public Map<Integer, User> getUsers() {
         return users;
     }

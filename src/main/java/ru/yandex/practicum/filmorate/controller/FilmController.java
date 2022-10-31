@@ -2,31 +2,36 @@ package ru.yandex.practicum.filmorate.controller;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exeptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
 import ru.yandex.practicum.filmorate.service.FilmService;
+import ru.yandex.practicum.filmorate.service.UserService;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
-import ru.yandex.practicum.filmorate.storage.InMemoryFilmStorage;
+import ru.yandex.practicum.filmorate.storage.RewiewStorage;
+import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.storage.dao.FilmDbStorage;
 
-
-import java.util.ArrayList;
 import java.util.List;
-
-
-import static ru.yandex.practicum.filmorate.validator.Validator.validateFilm;
 
 @Slf4j
 @RestController
 @RequestMapping("/films")
 public class FilmController {
-
     private FilmStorage filmStorage;
+    private FilmDbStorage filmDbStorage;
     private FilmService filmService;
+    private RewiewStorage rewiewStorage;
+    private UserService userService;
 
     @Autowired
-    public FilmController(FilmStorage filmStorage, FilmService filmService) {
+    public FilmController(@Qualifier("filmDbStorage") FilmStorage filmStorage, FilmDbStorage filmDbStorage,
+                          RewiewStorage rewiewStorage,UserService userService,FilmService filmService) {
         this.filmStorage = filmStorage;
+        this.filmDbStorage = filmDbStorage;
+        this.rewiewStorage = rewiewStorage;
+        this.userService = userService;
         this.filmService = filmService;
     }
 
@@ -37,7 +42,7 @@ public class FilmController {
 
     @PostMapping
     public Film create(@RequestBody Film film) throws ValidationException {
-        return filmStorage.create(film);
+        return filmService.create(film);
     }
 
     @PutMapping
@@ -47,21 +52,22 @@ public class FilmController {
 
     @GetMapping("/{id}")
     public Film getFilm(@PathVariable Integer id) {
-        return filmStorage.getFilmByID(id);
-    }
-
-    @PutMapping("/{id}/like/{userId}")
-    public void addLike(@PathVariable Integer id, @PathVariable Integer userId) {
-        filmService.addLike(id, userId);
-    }
-
-    @DeleteMapping("/{id}/like/{userId}")
-    public void deleteLike(@PathVariable Integer id, @PathVariable Integer userId) {
-        filmService.deleteLike(id, userId);
+        return filmService.getFilmByID(id);
     }
 
     @GetMapping("/popular")
     public List<Film> getPopularFilms(@RequestParam(value = "count", defaultValue = "10", required = false) Integer count) {
-        return filmService.getListPopularFilm(count);
+        return filmDbStorage.getPopular(count);
+    }
+
+    @PutMapping("/{id}/like/{user_id}")
+    public void addLike(@PathVariable Integer id, @PathVariable Integer user_id) {
+        rewiewStorage.addLike(id,user_id);
+    }
+
+    @DeleteMapping("/{id}/like/{user_id}")
+    public void deleteLike(@PathVariable Integer id, @PathVariable Integer user_id) {
+        userService.getUserByID(user_id);
+        rewiewStorage.deleteLike(id,user_id);
     }
 }

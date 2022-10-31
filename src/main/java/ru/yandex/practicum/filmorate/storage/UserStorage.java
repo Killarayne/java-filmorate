@@ -8,7 +8,6 @@ import java.util.Map;
 
 public interface UserStorage {
 
-    Map<Integer, User> getUsers();
 
     User getUserByID(Integer id);
 
@@ -17,5 +16,7 @@ public interface UserStorage {
     User create(User user) throws ValidationException;
 
     User update(User user) throws ValidationException;
+
+
 
 }

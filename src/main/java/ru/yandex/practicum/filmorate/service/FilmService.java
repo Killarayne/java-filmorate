@@ -2,17 +2,17 @@ package ru.yandex.practicum.filmorate.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exeptions.NotFoundException;
+import ru.yandex.practicum.filmorate.exeptions.ValidationException;
+import ru.yandex.practicum.filmorate.mapper.FilmMapper;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
+import ru.yandex.practicum.filmorate.validator.Validator;
 
-
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @Slf4j
@@ -22,38 +22,42 @@ public class FilmService {
     private UserStorage userStorage;
 
     @Autowired
-    public FilmService(FilmStorage filmStorage, UserStorage userStorage) {
+    public FilmService(@Qualifier("filmDbStorage") FilmStorage filmStorage, @Qualifier("userDbStorage") UserStorage userStorage) {
         this.filmStorage = filmStorage;
         this.userStorage = userStorage;
     }
 
-    public void addLike(Integer filmId, Integer userId) {
-        if (filmStorage.getFilms().containsKey(filmId) && userStorage.getUsers().containsKey(userId)) {
-            filmStorage.getFilmByID(filmId).setLike(userId);
-            log.debug("Добавлен лайк фильму " + filmStorage.getFilmByID(filmId));
+    public Film getFilmByID(Integer filmId) {
+        Film newFilm = filmStorage.getFilmByID(filmId);
+        if (newFilm != null) {
+            log.debug("Получен фильм с id: " + filmId);
+            return newFilm;
         } else {
-            log.warn("Неверный ID");
-            throw new NotFoundException("Неверный ID");
+            log.warn("Фильма с id: " + filmId + " не существует");
+            throw new NotFoundException("Фильма с id: " + filmId + " не существует");
         }
     }
 
-    public void deleteLike(Integer filmId, Integer userId) {
-        if (filmStorage.getFilms().containsKey(filmId) && userStorage.getUsers().containsKey(userId)) {
-            filmStorage.getFilmByID(filmId).getLikes().remove(userId);
-            log.debug("Удален лайк фильму " + filmStorage.getFilmByID(filmId));
+    public Film create(Film film) throws ValidationException {
+        if (Validator.validateFilm(film)) {
+            log.debug("Получен фильм с id: " + film.getId());
+            return filmStorage.create(film);
         } else {
-            log.warn("Неверный ID");
-            throw new NotFoundException("Не верный ID");
+            log.warn("Ошибка валидации фильма");
+            throw new ValidationException("Ошибка валидации фильма");
         }
 
     }
 
-    public List<Film> getListPopularFilm(long count) {
-        Collection<Film> popularFilms = filmStorage.getFilms().values();
-        log.debug("Выведены полпулярные фильмы");
-        return popularFilms.stream()
-                .sorted(Comparator.comparing(film -> film.getLikes().size(), Comparator.reverseOrder()))
-                .limit(count)
-                .collect(Collectors.toList());
+    public Film update(Film film) throws ValidationException {
+        if (Validator.validateFilm(film)) {
+            log.debug("Получен фильм с id: " + film.getId());
+            return film;
+        } else {
+            log.warn("Ошибка валидации фильма");
+            throw new ValidationException("Ошибка валидации фильма");
+        }
     }
+
+
 }

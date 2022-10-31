@@ -3,11 +3,10 @@ package ru.yandex.practicum.filmorate;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import ru.yandex.practicum.filmorate.model.Film;
+import ru.yandex.practicum.filmorate.model.Mpa;
 import ru.yandex.practicum.filmorate.model.User;
-import ru.yandex.practicum.filmorate.validator.Validator;
 
 import static org.junit.jupiter.api.Assertions.*;
-
 import static ru.yandex.practicum.filmorate.validator.Validator.validateFilm;
 import static ru.yandex.practicum.filmorate.validator.Validator.validateUser;
 
@@ -20,8 +19,8 @@ public class ValidatorTest {
 
     @BeforeEach
     void init() {
-        newFilm = new Film("Джеймс Бонд", "Фильм о шпионе", LocalDate.parse("2020-12-12"), 120);
-        newUser = new User("Saltykov@yandex.ru", "kasail", "Nikita", "1993-09-29");
+        newFilm = new Film(1, "Джеймс Бонд", "Фильм о шпионе", LocalDate.parse("2020-12-12"), 120, new Mpa(1, "G"));
+        newUser = new User(1, "Saltykov@yandex.ru", "kasail", "Nikita", "1993-09-29");
     }
 
 
@@ -99,7 +98,7 @@ public class ValidatorTest {
 
     @Test
     void shouldUseLoginWhenNameIsEmpty() {
-        User newUser2 = new User("Saltykov@yandex.ru", "kasail", null, "1993-09-29");
+        User newUser2 = new User(1, "Saltykov@yandex.ru", "kasail", null, "1993-09-29");
         assertEquals(newUser2.getName(), newUser2.getLogin(), "Неверное поведение при отсутвующем имени пользователя");
 
     }
@@ -121,8 +120,6 @@ public class ValidatorTest {
 
 
     }
-
-
 
 
 }

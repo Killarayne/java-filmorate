@@ -5,9 +5,7 @@ import lombok.Data;
 
 import java.time.LocalDate;
 
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
 
 @Data
 public class Film {
@@ -16,17 +14,34 @@ public class Film {
     private String description;
     private LocalDate releaseDate;
     private int duration;
+    private Mpa mpa;
     private Set<Integer> likes = new HashSet<>();
+    private Set<Genre> genres = new TreeSet<>(Comparator.comparing(Genre::getId));
 
-    public Film(String name, String description, LocalDate releaseDate, int duration) {
+
+    public Film(Integer id, String name, String description, LocalDate releaseDate, int duration, Mpa mpa) {
+        this.id = id;
         this.name = name;
         this.description = description;
         this.releaseDate = releaseDate;
         this.duration = duration;
+        this.mpa = mpa;
     }
 
     public void setLike(Integer userID) {
         likes.add(userID);
+    }
+
+    public void setGenre(Set<Genre> genres) {
+        this.genres = genres;
+    }
+
+    public void addGenre(Genre genre) {
+        genres.add(genre);
+    }
+
+    public boolean removeGenre(Genre genre) {
+        return genres.remove(genre);
     }
 
     public Set<Integer> getLikes() {
