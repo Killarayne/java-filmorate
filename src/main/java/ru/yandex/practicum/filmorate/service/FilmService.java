@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import ru.yandex.practicum.filmorate.exeptions.NotFoundException;
 import ru.yandex.practicum.filmorate.exeptions.ValidationException;
@@ -13,21 +14,22 @@ import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 import ru.yandex.practicum.filmorate.validator.Validator;
 
+import java.sql.SQLException;
+
 
 @Service
 @Slf4j
 public class FilmService {
 
     private FilmStorage filmStorage;
-    private UserStorage userStorage;
+
 
     @Autowired
-    public FilmService(@Qualifier("filmDbStorage") FilmStorage filmStorage, @Qualifier("userDbStorage") UserStorage userStorage) {
+    public FilmService(@Qualifier("filmDbStorage") FilmStorage filmStorage) {
         this.filmStorage = filmStorage;
-        this.userStorage = userStorage;
     }
 
-    public Film getFilmByID(Integer filmId) {
+    public Film getFilmByID(Integer filmId) throws DataAccessException {
         Film newFilm = filmStorage.getFilmByID(filmId);
         if (newFilm != null) {
             log.debug("Получен фильм с id: " + filmId);

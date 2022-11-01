@@ -1,6 +1,7 @@
 package ru.yandex.practicum.filmorate.storage.dao;
 
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -27,10 +28,9 @@ public class UserDbStorage implements UserStorage {
 
 
     @Override
-    public User getUserByID(Integer id) {
+    public User getUserByID(Integer id) throws DataAccessException {
         String sql = "SELECT * FROM users WHERE user_id = ?";
-        return jdbcTemplate.query(sql, new UserMapper(), id)
-                .stream().findAny().orElse(null);
+        return jdbcTemplate.queryForObject(sql, new UserMapper(), id);
     }
 
 
@@ -74,11 +74,6 @@ public class UserDbStorage implements UserStorage {
         }
     }
 
-    public User delete(User user) throws SQLException {
-        String sql = "DELETE FROM users WHERE user_id = ?";
-        jdbcTemplate.update(sql, user.getId());
-        return user;
-    }
 
 
     public List<User> getFriendsById(int id) {

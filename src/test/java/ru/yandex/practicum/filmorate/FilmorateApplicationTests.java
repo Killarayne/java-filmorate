@@ -15,6 +15,7 @@ import ru.yandex.practicum.filmorate.storage.dao.UserDbStorage;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -31,7 +32,7 @@ class FilmorateApplicationTests {
 
 
 	@Test
-	public void testFindFilmById() throws ValidationException {
+	public void testFindFilmById() throws ValidationException, SQLException {
 
 		Film testFilm = new Film(1,"name", "description", LocalDate.of(1993, 9, 28), 120, new Mpa(1,"G"));
 

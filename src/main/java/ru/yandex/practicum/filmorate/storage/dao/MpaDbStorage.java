@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.dao;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exeptions.NotFoundException;
@@ -26,10 +27,10 @@ public class MpaDbStorage  implements MpaStorage {
     }
 
     @Override
-    public Mpa getById(int id) {
+    public Mpa getById(int id) throws DataAccessException {
         String sqlQuery = "SELECT * FROM mpa_rating WHERE mpa_id = ?";
 
-        Mpa newMpa = jdbcTemplate.query(sqlQuery, new MpaMapper(), id).stream().findAny().orElse(null);
+        Mpa newMpa = jdbcTemplate.queryForObject(sqlQuery, new MpaMapper(), id);
 
         if (newMpa != null){
             return newMpa;

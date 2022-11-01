@@ -3,6 +3,7 @@ package ru.yandex.practicum.filmorate.controller;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataAccessException;
 import org.springframework.web.bind.annotation.*;
 import ru.yandex.practicum.filmorate.exeptions.ValidationException;
 import ru.yandex.practicum.filmorate.model.Film;
@@ -13,6 +14,7 @@ import ru.yandex.practicum.filmorate.storage.RewiewStorage;
 import ru.yandex.practicum.filmorate.storage.UserStorage;
 import ru.yandex.practicum.filmorate.storage.dao.FilmDbStorage;
 
+import java.sql.SQLException;
 import java.util.List;
 
 @Slf4j
@@ -51,7 +53,7 @@ public class FilmController {
     }
 
     @GetMapping("/{id}")
-    public Film getFilm(@PathVariable Integer id) {
+    public Film getFilm(@PathVariable Integer id)throws DataAccessException {
         return filmService.getFilmByID(id);
     }
 

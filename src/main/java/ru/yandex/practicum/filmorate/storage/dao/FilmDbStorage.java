@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.dao;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.simple.SimpleJdbcInsert;
@@ -12,6 +13,7 @@ import ru.yandex.practicum.filmorate.model.Genre;
 import ru.yandex.practicum.filmorate.storage.FilmStorage;
 import ru.yandex.practicum.filmorate.storage.GenreStorage;
 
+import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -32,11 +34,11 @@ public class FilmDbStorage implements FilmStorage {
     }
 
     @Override
-    public Film getFilmByID(Integer filmId) {
+    public Film getFilmByID(Integer filmId) throws DataAccessException {
         String sql = "SELECT film_id, name, description, releaseDate, duration, m.mpa_id, m.mpa_name " +
                 "FROM films LEFT JOIN mpa_rating AS m ON films.mpa_id = m.mpa_id " +
                 "WHERE film_id = ?";
-        Film newFilm = jdbcTemplate.query(sql, new FilmMapper(), filmId).stream().findAny().orElse(null);
+        Film newFilm = jdbcTemplate.queryForObject(sql, new FilmMapper(), filmId);
         for (Genre g : genreStorage.getFilmGenres(filmId)) {
             newFilm.setGenre(genreStorage.getFilmGenres(filmId));
         }

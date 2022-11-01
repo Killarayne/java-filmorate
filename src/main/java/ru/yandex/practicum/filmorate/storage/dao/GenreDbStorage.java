@@ -1,5 +1,6 @@
 package ru.yandex.practicum.filmorate.storage.dao;
 
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 import ru.yandex.practicum.filmorate.exeptions.NotFoundException;
@@ -31,16 +32,13 @@ public class GenreDbStorage implements GenreStorage {
     }
 
 
-    public Genre getById(Integer id) {
+    public Genre getById(Integer id) throws DataAccessException {
         String sqlQuery = "SELECT g.genre_id, " +
                 "g.name " +
                 "FROM genres AS g " +
                 "WHERE g.genre_id = ?;";
 
-        return jdbcTemplate.query(sqlQuery, new GenreMapper(), id)
-                .stream()
-                .findAny()
-                .orElseThrow(() -> new NotFoundException("Жанр с id=" + id + " не существует"));
+        return jdbcTemplate.queryForObject(sqlQuery, new GenreMapper(), id);
     }
 
     public Set<Genre> getFilmGenres(int filmId) {
